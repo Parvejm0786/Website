@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProcessEdge — Bank Statements to Tally, Instantly</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,800;1,9..144,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #0d1a2a;
+  --ink2: #2d3f52;
+  --paper: #f8f6f1;
+  --teal: #0e9e8e;
+  --teal-dark: #0A7A6C;
+  --teal-light: #e0f5f3;
+  --navy: #0F294D;
+  --gold: #d4a843;
+  --muted: #6b7e91;
+  --border: #ddd8cc;
+  --white: #ffffff;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 60px;
+  background: rgba(248,246,241,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 1.25rem;
+  color: var(--navy); text-decoration: none;
+}
+.nav-logo span { color: var(--teal); }
+.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links a { text-decoration: none; color: var(--ink2); font-size: 0.9rem; font-weight: 500; transition: color .2s; }
+.nav-links a:hover { color: var(--teal); }
+.nav-cta {
+  background: var(--navy); color: white; padding: 10px 24px;
+  border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.88rem;
+  transition: background .2s;
+}
+.nav-cta:hover { background: var(--teal-dark); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: grid; grid-template-columns: 1fr 1fr; align-items: center;
+  gap: 60px; padding: 120px 60px 80px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: -100px; right: -200px;
+  width: 700px; height: 700px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(14,158,142,0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--teal-light); color: var(--teal-dark);
+  padding: 6px 14px; border-radius: 100px; font-size: 0.78rem; font-weight: 600;
+  letter-spacing: 0.04em; margin-bottom: 24px;
+}
+.hero-badge::before { content: '✦'; font-size: 0.65rem; }
+h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+  line-height: 1.08; font-weight: 800;
+  color: var(--ink); margin-bottom: 24px;
+}
+h1 em { font-style: italic; color: var(--teal); }
+.hero-sub {
+  font-size: 1.1rem; color: var(--ink2); line-height: 1.7;
+  max-width: 480px; margin-bottom: 40px;
+}
+.hero-actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.btn-primary {
+  background: var(--navy); color: white; padding: 16px 32px;
+  border-radius: 8px; font-weight: 600; font-size: 0.95rem;
+  text-decoration: none; transition: all .2s; display: inline-block;
+  box-shadow: 0 4px 20px rgba(15,41,77,0.25);
+}
+.btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); box-shadow: 0 6px 28px rgba(14,158,142,0.3); }
+.btn-secondary {
+  color: var(--ink2); font-weight: 500; font-size: 0.95rem;
+  text-decoration: none; display: flex; align-items: center; gap: 8px;
+  padding: 16px 0; transition: color .2s;
+}
+.btn-secondary:hover { color: var(--teal); }
+.btn-secondary::after { content: '→'; transition: transform .2s; }
+.btn-secondary:hover::after { transform: translateX(4px); }
+
+/* hero visual */
+.hero-visual {
+  position: relative;
+}
+.app-card {
+  background: white; border-radius: 16px;
+  box-shadow: 0 24px 80px rgba(13,26,42,0.14), 0 4px 16px rgba(0,0,0,0.06);
+  overflow: hidden;
+  animation: float 6s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.app-titlebar {
+  background: #0d1a2a; padding: 14px 20px;
+  display: flex; align-items: center; gap: 8px;
+}
+.dot { width: 12px; height: 12px; border-radius: 50%; }
+.dot-r { background: #ff5f57; }
+.dot-y { background: #ffbd2e; }
+.dot-g { background: #28c840; }
+.app-titlebar-text { color: rgba(255,255,255,0.5); font-size: 0.75rem; margin-left: auto; }
+.app-body { padding: 28px; }
+.upload-zone {
+  border: 2px dashed var(--border); border-radius: 10px;
+  padding: 32px 20px; text-align: center; margin-bottom: 20px;
+  background: var(--paper);
+  transition: border-color .2s;
+}
+.upload-icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+.upload-zone p { color: var(--muted); font-size: 0.85rem; }
+.upload-zone strong { color: var(--ink); font-size: 0.9rem; display: block; margin-bottom: 4px; }
+.bank-select {
+  background: white; border: 1.5px solid var(--border); border-radius: 8px;
+  padding: 12px 16px; width: 100%; margin-bottom: 16px;
+  font-family: 'DM Sans', sans-serif; color: var(--ink2); font-size: 0.88rem;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7e91' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+}
+.convert-btn {
+  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+  color: white; border: none; padding: 14px; width: 100%; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.95rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.output-row {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--teal-light); border-radius: 8px; padding: 12px 14px; margin-top: 16px;
+}
+.output-icon { font-size: 1.2rem; }
+.output-info { flex: 1; }
+.output-name { font-size: 0.85rem; font-weight: 600; color: var(--teal-dark); }
+.output-sub { font-size: 0.75rem; color: var(--muted); }
+.output-dl { font-size: 0.8rem; font-weight: 600; color: var(--teal); text-decoration: none; }
+
+/* ── STATS BAR ── */
+.stats-bar {
+  background: var(--navy);
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+.stat-item {
+  padding: 40px 30px; text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Fraunces', serif; font-size: 2.8rem; font-weight: 800;
+  color: var(--teal); line-height: 1; margin-bottom: 6px;
+}
+.stat-label { color: rgba(255,255,255,0.6); font-size: 0.85rem; }
+
+/* ── SECTION COMMON ── */
+section { padding: 100px 60px; }
+.section-label {
+  font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--teal); font-weight: 600; margin-bottom: 16px;
+}
+h2 {
+  font-family: 'Fraunces', serif; font-size: clamp(2rem, 3vw, 2.8rem);
+  font-weight: 800; line-height: 1.15; color: var(--ink); margin-bottom: 20px;
+}
+h2 em { font-style: italic; color: var(--teal); }
+
+/* ── HOW IT WORKS ── */
+.how-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 60px;
+}
+.step-card {
+  position: relative; padding: 40px 32px;
+  background: white; border-radius: 14px;
+  border: 1px solid var(--border);
+  transition: box-shadow .25s, transform .25s;
+}
+.step-card:hover { box-shadow: 0 16px 48px rgba(13,26,42,0.1); transform: translateY(-4px); }
+.step-num {
+  font-family: 'Fraunces', serif; font-size: 4rem; font-weight: 800;
+  color: var(--teal-light); line-height: 1; position: absolute; top: 24px; right: 28px;
+}
+.step-icon { font-size: 2rem; margin-bottom: 20px; }
+.step-card h3 { font-size: 1.2rem; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+.step-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.65; }
+.step-connector {
+  position: absolute; top: 50%; right: -24px;
+  width: 48px; height: 2px; background: var(--border); z-index: 1;
+}
+.step-card:last-child .step-connector { display: none; }
+
+/* ── FEATURES ── */
+.features { background: var(--navy); }
+.features h2, .features .section-label { color: white; }
+.features h2 em { color: var(--teal); }
+.features-intro { color: rgba(255,255,255,0.65); max-width: 520px; line-height: 1.7; margin-bottom: 60px; }
+.feat-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
+}
+.feat-card {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px; padding: 32px 28px;
+  transition: background .25s, border-color .25s;
+}
+.feat-card:hover { background: rgba(14,158,142,0.12); border-color: rgba(14,158,142,0.35); }
+.feat-icon {
+  width: 48px; height: 48px; background: var(--teal-light);
+  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; margin-bottom: 20px;
+}
+.feat-card h3 { font-size: 1.05rem; font-weight: 600; color: white; margin-bottom: 10px; }
+.feat-card p { color: rgba(255,255,255,0.55); font-size: 0.875rem; line-height: 1.65; }
+
+/* ── BANKS SECTION ── */
+.banks { text-align: center; }
+.banks-sub { color: var(--muted); max-width: 480px; margin: 0 auto 50px; font-size: 0.95rem; line-height: 1.65; }
+.banks-grid {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-bottom: 24px;
+}
+.bank-pill {
+  background: white; border: 1.5px solid var(--border);
+  border-radius: 100px; padding: 10px 22px;
+  font-weight: 600; font-size: 0.85rem; color: var(--ink2);
+  transition: all .2s;
+}
+.bank-pill:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+.banks-note { color: var(--muted); font-size: 0.82rem; margin-top: 8px; }
+
+/* ── WHO SECTION ── */
+.who-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 60px;
+}
+.who-card {
+  background: white; border-radius: 14px; padding: 36px 30px;
+  border: 1px solid var(--border); transition: box-shadow .25s;
+}
+.who-card:hover { box-shadow: 0 12px 40px rgba(13,26,42,0.09); }
+.who-emoji { font-size: 2.2rem; margin-bottom: 18px; }
+.who-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+.who-card p { color: var(--muted); font-size: 0.875rem; line-height: 1.65; }
+
+/* ── FAQ ── */
+.faq { background: white; }
+.faq-list { max-width: 700px; margin: 0 auto; }
+details {
+  border-bottom: 1px solid var(--border); padding: 22px 0;
+}
+details:first-of-type { border-top: 1px solid var(--border); }
+summary {
+  list-style: none; cursor: pointer; font-weight: 600; font-size: 1rem;
+  color: var(--ink); display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; user-select: none;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after {
+  content: '+'; font-size: 1.4rem; color: var(--teal);
+  transition: transform .2s; flex-shrink: 0;
+}
+details[open] summary::after { transform: rotate(45deg); }
+details p { margin-top: 14px; color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+
+/* ── CTA SECTION ── */
+.cta-section {
+  background: linear-gradient(135deg, var(--teal-dark) 0%, var(--navy) 100%);
+  text-align: center; padding: 100px 60px;
+}
+.cta-section h2 { color: white; margin-bottom: 16px; }
+.cta-section p { color: rgba(255,255,255,0.7); max-width: 480px; margin: 0 auto 40px; font-size: 1rem; line-height: 1.65; }
+.btn-white {
+  background: white; color: var(--navy); padding: 16px 36px;
+  border-radius: 8px; font-weight: 700; font-size: 1rem;
+  text-decoration: none; display: inline-block; transition: all .2s;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+}
+.btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.25); }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--ink); color: rgba(255,255,255,0.5);
+  padding: 48px 60px; text-align: center; font-size: 0.85rem;
+}
+footer strong { color: rgba(255,255,255,0.85); }
+footer .footer-tagline { margin-top: 8px; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .hero { grid-template-columns: 1fr; padding: 100px 24px 60px; gap: 48px; }
+  .hero-visual { order: -1; }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  section { padding: 70px 24px; }
+  .how-grid, .feat-grid, .who-grid { grid-template-columns: 1fr; }
+  .step-connector { display: none; }
+  .cta-section { padding: 70px 24px; }
+  footer { padding: 36px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg width="32" height="32" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="60" r="58" fill="#0F294D"/>
+      <path d="M38 75 C38 92 55 98 68 91 C55 93 46 82 46 75 L46 52 C39 57 38 65 38 75Z" fill="#144A81"/>
+      <path d="M46 52 C46 28 68 24 80 38 C91 50 91 68 80 76 C68 85 52 77 46 75 C50 68 62 71 70 65 C80 58 80 42 72 35 C61 27 50 35 46 52Z" fill="#18A0D6"/>
+      <path d="M80 38 C91 30 108 42 108 62 C108 62 93 64 84 57 C77 52 72 44 72 35 C75 31 78 29 80 38Z" fill="#1ACBE0"/>
+      <path d="M80 76 C93 84 108 76 108 62 C108 62 97 72 88 67 C82 63 77 57 74 51 C76 62 77 70 80 76Z" fill="#1ACBE0"/>
+    </svg>
+    Process<span>Edge</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#how-it-works">How it works</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#banks">Banks</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#cta" class="nav-cta">Get ProcessEdge</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">Made for Indian Accountants</div>
+    <h1>Bank statements to <em>Tally-ready</em> data. Instantly.</h1>
+    <p class="hero-sub">Upload any bank PDF or Excel. ProcessEdge parses, maps, and exports a clean Tally import file — no manual entry, no formatting headaches.</p>
+    <div class="hero-actions">
+      <a href="#cta" class="btn-primary">Get the app →</a>
+      <a href="#how-it-works" class="btn-secondary">See how it works</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="app-card">
+      <div class="app-titlebar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <span class="app-titlebar-text">ProcessEdge v14</span>
+      </div>
+      <div class="app-body">
+        <div class="upload-zone">
+          <span class="upload-icon">📄</span>
+          <strong>SBI_April2025_Statement.pdf</strong>
+          <p>Ready to convert · 2.1 MB</p>
+        </div>
+        <select class="bank-select">
+          <option>🔍 Auto-detect bank (recommended)</option>
+          <option selected>State Bank of India (SBI)</option>
+          <option>HDFC Bank</option>
+          <option>ICICI Bank</option>
+        </select>
+        <button class="convert-btn">⚡ Convert to Tally XML</button>
+        <div class="output-row">
+          <span class="output-icon">✅</span>
+          <div class="output-info">
+            <div class="output-name">SBI_April2025_Tally.xml</div>
+            <div class="output-sub">342 transactions · Ready to import</div>
+          </div>
+          <a href="#" class="output-dl">↓ Download</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num">25+</div>
+    <div class="stat-label">Indian banks supported</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">3</div>
+    <div class="stat-label">Simple steps to import</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">100%</div>
+    <div class="stat-label">Local — data stays on your PC</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">PDF·XLS·CSV</div>
+    <div class="stat-label">All formats accepted</div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+  <div class="section-label">Simple workflow</div>
+  <h2>Three steps from statement<br>to <em>Tally import</em></h2>
+  <div class="how-grid">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <div class="step-icon">📤</div>
+      <h3>Upload your statement</h3>
+      <p>Drag and drop your bank statement — PDF, Excel, or CSV. ProcessEdge accepts files from all major Indian banks in their native formats.</p>
+      <div class="step-connector"></div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">02</div>
+      <div class="step-icon">⚙️</div>
+      <h3>Auto-process & map</h3>
+      <p>The engine detects your bank automatically, parses every transaction, and maps ledgers using your custom rules and narration cleanup settings.</p>
+      <div class="step-connector"></div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">03</div>
+      <div class="step-icon">✅</div>
+      <h3>Import to Tally</h3>
+      <p>Download the Tally XML file and import directly into Tally Prime or Tally ERP 9. One click — hundreds of entries posted instantly.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-label">What's inside</div>
+  <h2>Everything your firm needs,<br><em>nothing you don't</em></h2>
+  <p class="features-intro">Built for CA firms and finance teams who process statements every day. ProcessEdge removes the drudgery while keeping you in full control.</p>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-icon">🔍</div>
+      <h3>Auto Bank Detection</h3>
+      <p>Upload and go. ProcessEdge identifies your bank's statement layout automatically — no manual selection required for most formats.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📦</div>
+      <h3>Batch Processing</h3>
+      <p>Process multiple files in one go. Upload statements from different banks, convert them all at once, and download or import to Tally in bulk.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📋</div>
+      <h3>GSTR-2A to Tally</h3>
+      <p>Dedicated GSTR-2A module to import purchase register data directly into Tally. Keep your ITC reconciliation accurate and current.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🗂️</div>
+      <h3>Smart Mapping Rules</h3>
+      <p>Define narration-based ledger mapping rules and templates per bank. UPI, IMPS, NEFT — each gets the right ledger, automatically.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🔒</div>
+      <h3>100% Local Processing</h3>
+      <p>Your files never leave your computer. ProcessEdge runs entirely offline — no cloud upload, no subscription server, no data risk.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🏦</div>
+      <h3>All File Formats</h3>
+      <p>PDF (including password-protected), Excel (.xlsx/.xls), and CSV — ProcessEdge handles every format your bank provides.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BANKS -->
+<section id="banks" class="banks">
+  <div class="section-label">Bank coverage</div>
+  <h2>Works with <em>all major</em> Indian banks</h2>
+  <p class="banks-sub">Optimised parsers for each bank's native statement format — because SBI and HDFC format their PDFs very differently.</p>
+  <div class="banks-grid">
+    <div class="bank-pill">State Bank of India</div>
+    <div class="bank-pill">HDFC Bank</div>
+    <div class="bank-pill">ICICI Bank</div>
+    <div class="bank-pill">Axis Bank</div>
+    <div class="bank-pill">Kotak Mahindra</div>
+    <div class="bank-pill">Punjab National Bank</div>
+    <div class="bank-pill">Bank of Baroda</div>
+    <div class="bank-pill">Canara Bank</div>
+    <div class="bank-pill">Union Bank</div>
+    <div class="bank-pill">Yes Bank</div>
+    <div class="bank-pill">IndusInd Bank</div>
+    <div class="bank-pill">IDFC First Bank</div>
+    <div class="bank-pill">Federal Bank</div>
+    <div class="bank-pill">Bank of India</div>
+    <div class="bank-pill">Central Bank</div>
+  </div>
+  <p class="banks-note">+ many more. Custom bank formats available on request.</p>
+</section>
+
+<!-- WHO IS IT FOR -->
+<section>
+  <div class="section-label">Built for</div>
+  <h2>Who uses ProcessEdge?</h2>
+  <div class="who-grid">
+    <div class="who-card">
+      <div class="who-emoji">🏢</div>
+      <h3>CA Firms</h3>
+      <p>Handle dozens of client accounts efficiently. ProcessEdge batch-processes statements from multiple clients and banks — a firm's best time-saver.</p>
+    </div>
+    <div class="who-card">
+      <div class="who-emoji">📊</div>
+      <h3>Finance Teams</h3>
+      <p>Internal accounts teams at businesses that want clean, Tally-ready data every month without depending on manual entry or outsourcing.</p>
+    </div>
+    <div class="who-card">
+      <div class="who-emoji">🧾</div>
+      <h3>Auditors & Accountants</h3>
+      <p>Anyone who reconciles bank data against books regularly. ProcessEdge keeps the import clean and audit-ready, reducing correction rounds.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="section-label">Questions</div>
+  <h2 style="text-align:center; margin-bottom: 48px;">Common questions</h2>
+  <div class="faq-list">
+    <details>
+      <summary>Does ProcessEdge detect my bank automatically?</summary>
+      <p>Yes. The app identifies supported bank layouts automatically from the file structure. You can also select the bank manually for full control, which is useful for less common formats.</p>
+    </details>
+    <details>
+      <summary>What file formats are supported?</summary>
+      <p>PDF (including password-protected PDFs), Excel (.xlsx and .xls), and CSV. ProcessEdge handles the native download formats from all major Indian banks.</p>
+    </details>
+    <details>
+      <summary>Is my financial data safe? Does it go to a server?</summary>
+      <p>Your data never leaves your computer. ProcessEdge is a desktop application that processes everything locally. No cloud upload, no external server — complete data privacy.</p>
+    </details>
+    <details>
+      <summary>Does it work with Tally Prime and Tally ERP 9?</summary>
+      <p>Yes, ProcessEdge exports standard Tally XML that imports cleanly into both Tally Prime and Tally ERP 9.</p>
+    </details>
+    <details>
+      <summary>Can I process multiple bank statements at once?</summary>
+      <p>Yes — the batch module lets you upload multiple files with different banks, process them all together, and download or import to Tally in one action.</p>
+    </details>
+    <details>
+      <summary>What is the GSTR-2A module?</summary>
+      <p>A dedicated tool to convert your GSTR-2A purchase register data into a Tally-importable format — keeping your ITC claims and purchase ledgers in sync with the GST portal.</p>
+    </details>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section" id="cta">
+  <h2>Stop typing. Start importing.</h2>
+  <p>Join CA firms and finance teams across India who save hours every month with ProcessEdge.</p>
+  <a href="mailto:hello@processedge.in" class="btn-white">Get ProcessEdge →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>ProcessEdge</strong>
+  <p class="footer-tagline">Optimising Workflow · Driving Growth</p>
+  <p style="margin-top:16px">© 2025 ProcessEdge. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
