@@ -48,8 +48,69 @@ nav {
 }
 .nav-logo span { color: var(--teal); }
 .nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links li { position: relative; }
 .nav-links a { text-decoration: none; color: var(--ink2); font-size: 0.9rem; font-weight: 500; transition: color .2s; }
 .nav-links a:hover { color: var(--teal); }
+.nav-links a.product-link,
+.product-toggle {
+  color: var(--navy);
+  font-weight: 700;
+}
+.nav-links a.product-link:hover,
+.product-toggle:hover { color: var(--teal-dark); }
+.product-menu {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  min-width: 200px;
+  padding: 10px;
+  border: 1px solid rgba(15,41,77,0.1);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.98);
+  box-shadow: 0 18px 40px rgba(13,26,42,0.12);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(8px);
+  transition: opacity .2s, transform .2s, visibility .2s;
+}
+.product-menu::before {
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  background: white;
+  border-top: 1px solid rgba(15,41,77,0.1);
+  border-left: 1px solid rgba(15,41,77,0.1);
+  transform: translateX(-50%) rotate(45deg);
+}
+.product-group:hover .product-menu,
+.product-group:focus-within .product-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.product-menu a {
+  display: block;
+  padding: 12px 14px;
+  border-radius: 10px;
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 600;
+  background: transparent;
+}
+.product-menu a:hover {
+  background: var(--teal-light);
+  color: var(--teal-dark);
+}
+.product-meta {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
 .nav-cta {
   background: var(--navy); color: white; padding: 10px 24px;
   border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.88rem;
@@ -105,6 +166,24 @@ h1 em { font-style: italic; color: var(--teal); }
 .btn-secondary:hover { color: var(--teal); }
 .btn-secondary::after { content: '→'; transition: transform .2s; }
 .btn-secondary:hover::after { transform: translateX(4px); }
+.btn-product {
+  background: var(--white);
+  color: var(--navy);
+  border: 1px solid rgba(15,41,77,0.12);
+  padding: 16px 28px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  display: inline-block;
+  transition: all .2s;
+  box-shadow: 0 8px 28px rgba(13,26,42,0.08);
+}
+.btn-product:hover {
+  transform: translateY(-1px);
+  border-color: var(--teal);
+  color: var(--teal-dark);
+}
 
 /* hero visual */
 .hero-visual {
@@ -342,6 +421,12 @@ footer .footer-tagline { margin-top: 8px; font-size: 0.78rem; letter-spacing: 0.
   <ul class="nav-links">
     <li><a href="#how-it-works">How it works</a></li>
     <li><a href="#features">Features</a></li>
+    <li class="product-group">
+      <a href="https://pdf.processedges.com" class="product-toggle">Product</a>
+      <div class="product-menu">
+        <a href="https://pdf.processedges.com" class="product-link">PDF Tool <span class="product-meta">Open the hosted PDF converter</span></a>
+      </div>
+    </li>
     <li><a href="#banks">Banks</a></li>
     <li><a href="#faq">FAQ</a></li>
   </ul>
@@ -356,6 +441,7 @@ footer .footer-tagline { margin-top: 8px; font-size: 0.78rem; letter-spacing: 0.
     <p class="hero-sub">Upload any bank PDF or Excel. ProcessEdge parses, maps, and exports a clean Tally import file — no manual entry, no formatting headaches.</p>
     <div class="hero-actions">
       <a href="#cta" class="btn-primary">Get the app →</a>
+      <a href="https://pdf.processedges.com" class="btn-product">Open PDF Tool</a>
       <a href="#how-it-works" class="btn-secondary">See how it works</a>
     </div>
   </div>
