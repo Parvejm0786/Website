@@ -45,11 +45,14 @@ nav {
   border-bottom: 1px solid var(--border);
 }
 .nav-logo {
-  display: flex; align-items: center; gap: 10px;
-  font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 1.25rem;
+  display: flex; align-items: center;
   color: var(--navy); text-decoration: none;
 }
-.nav-logo span { color: var(--teal); }
+.nav-logo img {
+  display: block;
+  height: 42px;
+  width: auto;
+}
 .nav-links { display: flex; gap: 36px; list-style: none; }
 .nav-links li { position: relative; }
 .nav-links a { text-decoration: none; color: var(--ink2); font-size: 0.9rem; font-weight: 500; transition: color .2s; }
@@ -412,14 +415,7 @@ footer .footer-tagline { margin-top: 8px; font-size: 0.78rem; letter-spacing: 0.
 <!-- NAV -->
 <nav>
   <a href="#" class="nav-logo">
-    <svg width="32" height="32" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="60" cy="60" r="58" fill="#0F294D"/>
-      <path d="M38 75 C38 92 55 98 68 91 C55 93 46 82 46 75 L46 52 C39 57 38 65 38 75Z" fill="#144A81"/>
-      <path d="M46 52 C46 28 68 24 80 38 C91 50 91 68 80 76 C68 85 52 77 46 75 C50 68 62 71 70 65 C80 58 80 42 72 35 C61 27 50 35 46 52Z" fill="#18A0D6"/>
-      <path d="M80 38 C91 30 108 42 108 62 C108 62 93 64 84 57 C77 52 72 44 72 35 C75 31 78 29 80 38Z" fill="#1ACBE0"/>
-      <path d="M80 76 C93 84 108 76 108 62 C108 62 97 72 88 67 C82 63 77 57 74 51 C76 62 77 70 80 76Z" fill="#1ACBE0"/>
-    </svg>
-    Process<span>Edge</span>
+    <img src="./processedge-logo.svg" alt="ProcessEdge logo">
   </a>
   <ul class="nav-links">
     <li><a href="#how-it-works">How it works</a></li>

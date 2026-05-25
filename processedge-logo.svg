@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
   <defs>
     <linearGradient id="p-dark" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#0A2342"/>
@@ -13,10 +13,16 @@
       <stop offset="100%" stop-color="#0B8B9E"/>
     </linearGradient>
   </defs>
-  <g transform="translate(0, 0) scale(1.18)">
+  <g transform="translate(145, 30)">
     <path d="M 50,150 C 50,210 100,230 140,210 C 100,215 75,185 75,150 L 75,90 C 55,105 50,125 50,150 Z" fill="url(#p-dark)"/>
     <path d="M 75,90 C 75,30 135,20 170,50 C 200,75 200,120 170,140 C 135,165 95,145 75,150 C 85,130 115,135 140,120 C 165,105 165,70 145,55 C 120,40 95,55 75,90 Z" fill="url(#p-mid)"/>
     <path d="M 170,50 C 200,30 250,55 270,100 C 270,100 220,105 185,90 C 165,80 150,65 145,55 C 150,50 160,45 170,50 Z" fill="url(#e-cyan)"/>
     <path d="M 170,140 C 205,160 250,140 270,100 C 270,100 230,130 190,115 C 175,110 165,100 155,90 C 160,110 165,125 170,140 Z" fill="url(#e-cyan)"/>
   </g>
+  <text x="300" y="290" font-family="Poppins, Montserrat, 'Segoe UI', sans-serif" font-size="52" font-weight="600" text-anchor="middle">
+    <tspan fill="#0F294D">Process</tspan><tspan fill="#14B8A6">Edge</tspan>
+  </text>
+  <text x="300" y="335" font-family="Inter, 'Segoe UI', Helvetica, sans-serif" font-size="14" font-weight="600" fill="#64748B" letter-spacing="4" text-anchor="middle">
+    OPTIMISING WORKFLOW DRIVING GROWTH
+  </text>
 </svg>
